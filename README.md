@@ -8,7 +8,7 @@
 È¥[ĞÂÀËÎ¢²©](https://passport.weibo.com)³ò³ò£¡£¡
 
 ```
-			<dependency>
+		<dependency>
 		    <groupId>org.slf4j</groupId>
 		    <artifactId>slf4j-api</artifactId>
 		    <version>${slf4j-version}</version>
