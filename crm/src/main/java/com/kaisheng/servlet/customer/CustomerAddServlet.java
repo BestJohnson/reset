@@ -1,0 +1,63 @@
+package com.kaisheng.servlet.customer;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.kaisheng.service.customer.CustomerService;
+import com.kaisheng.servlet.BaseServlet;
+import com.kaisheng.util.AjaxResult;
+import com.kaisheng.util.Config;
+@WebServlet("/customer/add")
+public class CustomerAddServlet extends BaseServlet{
+
+	private static final long serialVersionUID = 1L;
+	
+	CustomerService service = new CustomerService();
+	
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String ispublic = req.getParameter("ispublic");
+		int accountId;
+		if(StringUtils.isNotEmpty(ispublic) && ispublic.equals("true")) {
+			accountId = Config.PUBLIC_ID;
+		} else {
+			accountId = getCurrAccount(req).getId();
+		}
+		
+		List<String> sources = service.findAllSources();
+		List<String> trades = service.findAllTrades();
+		req.setAttribute("accountId", accountId);
+		req.setAttribute("sources", sources);
+		req.setAttribute("trades", trades);
+		forward("customer/add", req, resp);
+	}
+	
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String custname = req.getParameter("custname");
+		String sex = req.getParameter("sex");
+		String jobtitle = req.getParameter("jobtitle");
+		String address = req.getParameter("address");
+		String mobile = req.getParameter("mobile");
+		String source = req.getParameter("source");
+		String trade = req.getParameter("trade");
+		String level = req.getParameter("level");
+		String mark = req.getParameter("mark");
+		String accountId = req.getParameter("accountId");
+		
+		service.addMyCustomer(custname,sex,jobtitle,address,mobile,source,trade,level,mark,Integer.parseInt(accountId));
+		
+		AjaxResult result = AjaxResult.success(accountId);
+		sendJson(result, resp);
+		
+	}
+}
